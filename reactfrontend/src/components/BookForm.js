@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createBook, updateBook, fetchBookById } from '../api';
 
+
 function BookForm({ onSubmit, bookId = null }) {
     const [book, setBook] = useState({ title: '', author: '', published_year: '', genre: '', description: '' });
     const [error, setError] = useState(null);
@@ -19,11 +20,11 @@ function BookForm({ onSubmit, bookId = null }) {
         }
     }, [bookId]);
 
-    const handleChange = e => {
+    const handleChange = (e) => {
         setBook({ ...book, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async e => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!book.title || !book.author) {
             setError('Title and author are required.');
@@ -35,7 +36,7 @@ function BookForm({ onSubmit, bookId = null }) {
             } else {
                 await createBook(book);
             }
-            onSubmit(); // Call onSubmit passed from parent to refresh or redirect
+            onSubmit(); 
         } catch (error) {
             setError(error.message);
         }
@@ -43,12 +44,39 @@ function BookForm({ onSubmit, bookId = null }) {
 
     return (
         <form onSubmit={handleSubmit}>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            <input name="title" value={book.title} onChange={handleChange} placeholder="Title" required />
-            <input name="author" value={book.author} onChange={handleChange} placeholder="Author" required />
-            <input name="published_year" value={book.published_year} onChange={handleChange} placeholder="Year" />
-            <input name="genre" value={book.genre} onChange={handleChange} placeholder="Genre" />
-            <textarea name="description" value={book.description} onChange={handleChange} placeholder="Description" />
+            {error && <p>{error}</p>}
+            <input
+                name="title"
+                value={book.title}
+                onChange={handleChange}
+                placeholder="Title"
+                required
+            />
+            <input
+                name="author"
+                value={book.author}
+                onChange={handleChange}
+                placeholder="Author"
+                required
+            />
+            <input
+                name="published_year"
+                value={book.published_year}
+                onChange={handleChange}
+                placeholder="Year"
+            />
+            <input
+                name="genre"
+                value={book.genre}
+                onChange={handleChange}
+                placeholder="Genre"
+            />
+            <textarea
+                name="description"
+                value={book.description}
+                onChange={handleChange}
+                placeholder="Description"
+            />
             <button type="submit" className="small-button">
                 {bookId ? 'Update' : 'Add'} Book
             </button>

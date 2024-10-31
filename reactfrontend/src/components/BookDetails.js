@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchBookById } from '../api'; // Import the API function
+import { fetchBookById } from '../api';
 
 function BookDetails() {
-    const { id } = useParams(); // Get the book ID from the URL parameters
+    const { id } = useParams(); 
     const [book, setBook] = useState(null);
     const [error, setError] = useState(null);
 
@@ -22,11 +22,11 @@ function BookDetails() {
     }, [id]);
 
     if (error) {
-        return <p>{error}</p>;
+        return <p className="error-message">{error}</p>;
     }
 
     return book ? (
-        <div>
+        <div className="book-details-container">
             <h3>{book.title}</h3>
             <p><strong>Author:</strong> {book.author}</p>
             <p><strong>Published Year:</strong> {book.published_year}</p>
@@ -34,7 +34,7 @@ function BookDetails() {
             <p><strong>Description:</strong> {book.description}</p>
         </div>
     ) : (
-        <p>Loading book details...</p>
+        <p className="loading-message">Loading book details...</p>
     );
 }
 

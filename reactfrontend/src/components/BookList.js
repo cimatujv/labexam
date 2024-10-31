@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Card, Button, Container, Row, Col } from 'react-bootstrap';
 import { fetchBooks, deleteBook } from '../api';
-
 
 function BookList() {
     const [books, setBooks] = useState([]);
@@ -17,34 +17,43 @@ function BookList() {
                 setError('Failed to load books. Please try again later.');
             }
         };
-
         getBooks();
     }, []);
 
     const handleDelete = async (id) => {
         try {
-            await deleteBook(id);
             setBooks((prevBooks) => prevBooks.filter(book => book.id !== id));
+            await deleteBook(id);
+            setError(null);
         } catch (error) {
             console.error('Error deleting book:', error);
             setError('Failed to delete book. Please try again.');
+            const data = await fetchBooks();
+            setBooks(data);
         }
     };
 
     return (
-        <div>
+        <Container className="dashboard-container">
+            <div className="dashboard-header">BOOK MANAGEMENT DASHBOARD</div>
             {error && <p style={{ color: 'red' }}>{error}</p>}
-            <ul>
+            <Row className="cards-container">
                 {books.map((book) => (
-                    <li key={book.id}>
-                        <Link to={`/view/${book.id}`}>{book.title}</Link> - {book.author}
-                        <Link to={`/edit/${book.id}`} className="link-button">Edit</Link>
-                        <button onClick={() => handleDelete(book.id)} className="link-button">Delete</button>
-                    </li>
+                    <Col key={book.id} className="mb-4">
+                        <Card className="book-card">
+                            <Card.Body>
+                                <Card.Title>{book.title}</Card.Title>
+                                <Card.Subtitle className="mb-2">{book.author}</Card.Subtitle>
+                                <Button variant="link" as={Link} to={`/view/${book.id}`} className="link-button">View</Button>
+                                <Button variant="link" as={Link} to={`/edit/${book.id}`} className="link-button">Edit</Button>
+                                <Button variant="link" onClick={() => handleDelete(book.id)} className="link-button">Delete</Button>
+                            </Card.Body>
+                        </Card>
+                    </Col>
                 ))}
-            </ul>
-            <Link to="/add">Add New Book</Link>
-        </div>
+            </Row>
+            <Link to="/add" className="add-button">Add Book</Link>
+        </Container>
     );
 }
 

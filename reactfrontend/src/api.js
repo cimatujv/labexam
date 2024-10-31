@@ -48,6 +48,9 @@ export const deleteBook = async (id) => {
     const response = await fetch(`${API_BASE_URL}/${id}`, {
         method: 'DELETE',
     });
+    if (response.status === 204) {
+        return { success: true };
+    }
     if (!response.ok) {
         throw new Error('Failed to delete book');
     }
